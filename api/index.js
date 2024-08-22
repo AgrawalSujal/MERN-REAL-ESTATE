@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import userRouter from "./routes/user.route.js";
 
 dotenv.config();
 mongoose
@@ -13,6 +14,10 @@ mongoose
     console.log(err);
   });
 const app = express();
+
+app.use(express.json()); //used to stringify the json data
+
+app.use("/api/user", userRouter);
 
 app.listen(3000, () => {
   console.log("Sever is listening at 3000");
