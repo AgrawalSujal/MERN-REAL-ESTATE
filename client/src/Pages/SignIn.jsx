@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/userSlice.js";
+
 const SignIn = () => {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
-  // const useDispatch = useDispatch();
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -13,9 +20,12 @@ const SignIn = () => {
     });
   };
   const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
+      setLoading(true);
+      dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
-        method: POST,
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -24,12 +34,19 @@ const SignIn = () => {
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
-        res.json("Wrong credentials..!!");
+        setLoading(false);
+        setError(data.message);
+        dispatch(signInFailure(data.message));
         return;
       }
+      setLoading(false);
+      setError(null);
+      dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
-      console.log(error.message);
+      setLoading(false);
+      setError(error.message);
+      dispatch(signInFailure(error.message));
     }
   };
   return (
@@ -41,6 +58,7 @@ const SignIn = () => {
           placeholder="email"
           className="border p-3 rounded-lg"
           id="email"
+          value={formData.email}
           onChange={handleChange}
         />
         <input
@@ -48,9 +66,13 @@ const SignIn = () => {
           placeholder="password"
           className="border p-3 rounded-lg"
           id="password"
+          value={formData.password}
           onChange={handleChange}
         />
-        <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
+        <button
+          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+          disabled={loading}
+        >
           {loading ? "Loading..." : "Sign In"}
         </button>
       </form>
