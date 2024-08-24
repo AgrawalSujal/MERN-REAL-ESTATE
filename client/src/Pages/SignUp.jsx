@@ -1,19 +1,23 @@
 import React from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
+import OAuth from "../Components/OAuth";
 const SignUp = () => {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
+    const { id, value } = e.target;
+    setFormData((prevtate) => ({
+      ...prevtate,
+      [id]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -28,7 +32,7 @@ const SignUp = () => {
         },
         body: JSON.stringify(formData),
       });
-      const data = res.json();
+      const data = await res.json();
       console.log(data);
       if (data.success === false) {
         setLoading(false);
@@ -55,6 +59,7 @@ const SignUp = () => {
           placeholder="username"
           className="border p-3 rounded-lg"
           id="username"
+          value={formData.username}
           onChange={handleChange}
         />
         <input
@@ -62,6 +67,7 @@ const SignUp = () => {
           placeholder="email"
           className="border p-3 rounded-lg"
           id="email"
+          value={formData.email}
           onChange={handleChange}
         />
         <input
@@ -69,11 +75,17 @@ const SignUp = () => {
           placeholder="password"
           className="border p-3 rounded-lg"
           id="password"
+          value={formData.password}
           onChange={handleChange}
         />
-        <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+        >
           {loading ? "Loading...." : "Sign Up"}
         </button>
+        <OAuth />
       </form>
       <div className="flex gap-2 mt-5">
         <p>Have an account?</p>
