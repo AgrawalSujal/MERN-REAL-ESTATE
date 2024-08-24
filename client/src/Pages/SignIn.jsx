@@ -84,7 +84,7 @@ const SignIn = () => {
           <span className="text-blue-700">Sign Up</span>
         </Link>
       </div>
-      {/* {error && <p className="text-red-500">{error}</p>} */}
+      {error && <p className="text-red-500">{error}</p>}
     </div>
   );
 };
