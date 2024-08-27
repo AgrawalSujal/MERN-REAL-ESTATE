@@ -11,6 +11,7 @@ import CreateListing from "./Pages/CreateListing";
 import UpdateListing from "./Pages/UpdateListing";
 import PrivateRoute from "./Components/PrivateRoute.jsx";
 import Header from "./Components/Header.jsx";
+
 const App = () => {
   return (
     <BrowserRouter>

@@ -173,14 +173,12 @@ export default function Profile() {
 
       const data = await res.json();
       if (data.success === false) {
-        setShowListingsError(true);
         throw new Error(data.message);
       }
-
       setUserListings(data);
     } catch (error) {
-      setShowListingsError(true);
-      setShowListingsError(error.message);
+      setShowListingsError(error.message || "Some error occured");
+      setUserListings([]);
     }
   };
 
@@ -246,7 +244,7 @@ export default function Profile() {
         <input
           type="text"
           placeholder="Username"
-          defaultValue={formData.username}
+          defaultValue={currentUser.username}
           id="username"
           className="border p-3 rounded-lg"
           onChange={handleChange}
@@ -255,7 +253,7 @@ export default function Profile() {
           type="email"
           placeholder="Email"
           id="email"
-          defaultValue={formData.email}
+          defaultValue={currentUser.email}
           className="border p-3 rounded-lg"
           onChange={handleChange}
         />
@@ -295,11 +293,14 @@ export default function Profile() {
       <p className="text-green-700 mt-5">
         {updateSuccess ? "User is updated successfully!" : ""}
       </p>
-      <button onClick={handleShowListings} className="text-green-700 w-full">
+      <button
+        onClick={handleShowListings}
+        className="text-green-700 w-full hover:text-green-500"
+      >
         Show Listings
       </button>
       <p className="text-red-700 mt-5">
-        {showListingsError ? "Error showing listings" : ""}
+        {showListingsError ? console.log(error) : ""}
       </p>
 
       {userListings && userListings.length > 0 && (
