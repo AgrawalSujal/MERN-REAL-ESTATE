@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { FaSearch } from "react-icons/fa";
 import { BsFillBuildingsFill } from "react-icons/bs";
-const Header = () => {
+export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const [searchTerm, setSeachTerm] = useState(" ");
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ const Header = () => {
               About
             </li>
           </Link>
-          {currentUser ? (
+          {/* {currentUser ? (
             <li>
               <Link to="/profile">
                 <img
@@ -75,11 +75,22 @@ const Header = () => {
             <li className="text-slate-700 hover:underline">
               <Link to="/sign-in">Sign in</Link>
             </li>
-          )}
+          )} */}
+          <Link to="/profile">
+            {currentUser ? (
+              <>
+                <img
+                  className="rounded-full h-7 w-7 object-cover"
+                  src={currentUser.avatar}
+                  alt="profile"
+                />
+              </>
+            ) : (
+              <li className=" text-slate-700 hover:underline"> Sign in</li>
+            )}
+          </Link>
         </ul>
       </div>
     </header>
   );
-};
-
-export default Header;
+}
